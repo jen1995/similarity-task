@@ -10,7 +10,6 @@ from hyperboloid_helpers.analogy import *
 from hyperboloid_helpers.fasttext import *
 
 SIMILARITY_DIR = 'eval-word-vectors/data/word-sim/'
-# DATASETS = ['EN-WS-353-ALL.txt', 'EN-SIMLEX-999.txt', 'EN-MEN-TR-3k.txt']
 
 DATASETS = [
 'EN-MC-30.txt', 
@@ -33,16 +32,6 @@ def normalize(array, l=2, axis=None, return_norm=False):
         return array / div, nrm
     return array / div
 
-# def normalize_pseudo_eucl(array, metric, return_norm=False):
-#     div = np.linalg.norm(array, ord=l, axis=axis, keepdims=True)
-#     if return_norm:
-#         nrm = div.copy().squeeze()
-
-#     div[np.isclose(div, 0)] = 1.
-#     if return_norm:
-#         return array / div, nrm
-#     return array / div
-
 
 def evaluate_similarity(vec_file, hyperboloid=False, pseudo_eucl=True):
     """
@@ -59,10 +48,6 @@ def evaluate_similarity(vec_file, hyperboloid=False, pseudo_eucl=True):
         word_vecs = load_minkowski_vectors(vec_file)
     elif pseudo_eucl:
         word_vecs = load_fasttext_vectors(vec_file)
-        # with open('output_new.txt') as f:
-        #     metric = f.readlines()
-
-        # metric = np.array(metric[0].split(), dtype=np.float64)
         W = np.array(word_vecs)
         metric_pseudo = np.linalg.inv(W.T @ W)
     else:
@@ -100,7 +85,6 @@ def evaluate_similarity(vec_file, hyperboloid=False, pseudo_eucl=True):
                 elif pseudo_eucl:
                     auto_dict[(word1, word2)] = \
                         np.sum(np.array(word_vecs.loc[word1]) \
-                        # * metric \
                         * np.array(word_vecs.loc[word2]))
                         # np.array(word_vecs.loc[word1]) @ metric_pseudo @ np.array(word_vecs.loc[word2])
 
