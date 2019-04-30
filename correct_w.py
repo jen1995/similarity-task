@@ -1,15 +1,26 @@
 import numpy as np
+
 from tqdm import tqdm
+from sys import argv, exit
+
+
+if len(argv) != 3:
+    print('Usage: %s <path to model.vec> <path to output.txt>' % argv[0])
+    exit(0)
+
+model_neg_file = argv[1]
+output_vec_file = argv[2]
 
 W = []
-with open('model_neg_new.vec') as f:
+with open(model_neg_file) as f:
     l = next(f)
     for line in tqdm(f, desc='reading model'):
         vector = list(map(float, line.split()[1:]))
         W.append(vector)
 
+print('calculating correction matrix')
 W = np.array(W)
-with open('output_new.txt') as f:
+with open(output_vec_file) as f:
      D = f.readlines()
 D = np.array(D[0].split(), dtype=np.float64)
 D = np.diag(D)
@@ -39,12 +50,17 @@ assert np.allclose(S.T @ WtW @ S, Lambda, atol=1e-05)
 
 new_W = W @ S
 
-with open('model_neg_new.vec') as f:
-    with open('model_neg_corrected_new.vec', 'w') as f_cor:
+with open(model_neg_file) as f:
+    corrected_model_file = model_neg_file[:-4] + '_corrected.vec'
+
+    with open(corrected_model_file, 'w') as f_cor:
         first_line = next(f)
         print(first_line, file=f_cor, end="")
         counter = 0
-        for line in tqdm(f, desc='writing the corrected W to model_neg_corrected.vec'):
+
+#         print('writing the corrected W to ' + corrected_model_file)
+        for line in tqdm(f, desc='writing the corrected W to ' + corrected_model_file):
+#         for line in f:
             word = line.split()[0]
             print(word, file=f_cor, end=" ")
             print(*new_W[counter], sep=" ", file=f_cor)
