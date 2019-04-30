@@ -58,9 +58,7 @@ with open(model_neg_file) as f:
         print(first_line, file=f_cor, end="")
         counter = 0
 
-#         print('writing the corrected W to ' + corrected_model_file)
         for line in tqdm(f, desc='writing the corrected W to ' + corrected_model_file):
-#         for line in f:
             word = line.split()[0]
             print(word, file=f_cor, end=" ")
             print(*new_W[counter], sep=" ", file=f_cor)
