@@ -18,7 +18,7 @@ with open(model_neg_file) as f:
         vector = list(map(float, line.split()[1:]))
         W.append(vector)
 
-print('calculating correction matrix')
+print('calculating the correction matrix')
 W = np.array(W)
 with open(output_vec_file) as f:
      D = f.readlines()
